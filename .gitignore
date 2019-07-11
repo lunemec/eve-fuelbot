@@ -1,0 +1,4 @@
+.DS_Store
+auth.bin
+auth.bin.orig
+Makefile
