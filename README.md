@@ -52,3 +52,6 @@ I prepared `systemd` (under /debian/) unit, but you have to copy it and the bina
 a `.deb` file or some other package, feel free to do so.
 
 If you are successfull, you should see the Bot's icon in the discord users list in the channel.
+
+## No need to say thanks, that is what ISK is for.
+If you like this bot and use it, consider donating some ISK to `Lukas Nemec`. Thanks.
