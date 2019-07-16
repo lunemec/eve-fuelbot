@@ -38,9 +38,11 @@ func runLogin(cmd *cobra.Command, args []string) {
 	// Notify signalChan on SIGINT and SIGTERM.
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 
-	err = os.Remove(authfile)
-	if err != nil {
-		panic(fmt.Sprintf("unable to delete file: %s please remove it by hand", authfile))
+	if _, err := os.Stat(authfile); !os.IsNotExist(err) {
+		err = os.Remove(authfile)
+		if err != nil {
+			panic(fmt.Sprintf("unable to delete file: %s please remove it by hand", authfile))
+		}
 	}
 
 	handler := handler.New(signalChan, log, httpClient(), token.NewFileStorage(authfile), []byte(sessionKey), eveClientID, eveSSOSecret, eveCallbackURL, eveScopes)
