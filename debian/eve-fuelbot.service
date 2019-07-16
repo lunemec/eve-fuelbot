@@ -2,14 +2,17 @@
 Description=EVE Fuel BOT
 Requires=network.target
 After=network.target
+StartLimitInterval=200
+StartLimitBurst=5
 
 [Service]
 Type=simple
-User=nanny
+User=evefuelbot
 Group=nogroup
 WorkingDirectory=/srv/eve_fuelbot
 ExecStart=/srv/eve_fuelbot/fuelbot run -s "FILLME" --discord_auth_token="FILLME" --discord_channel_id="FILLME" --eve_client_id="FILLME" --eve_sso_secret="FILLME"
 Restart=on-failure
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target

@@ -2,3 +2,5 @@
 auth.bin
 auth.bin.orig
 Makefile
+main
+fuelbot
