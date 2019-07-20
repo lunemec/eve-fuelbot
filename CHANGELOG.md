@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - `fuelbot login` problems with "auth.bin" missing.
 - Fixed systemd service file to restart with delay.
-### Changed
+### Changed
 - Import paths everywhere to `github.com`
 
 ## [1.0.0] - 2019-07-11
