@@ -54,14 +54,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVarP(&authfile, "auth_file", "a", "auth.bin", "path to file where to save authentication data")
-	rootCmd.PersistentFlags().StringVarP(&sessionKey, "session_key", "s", "", "session key, use random string")
-	rootCmd.PersistentFlags().StringVar(&eveClientID, "eve_client_id", "", "EVE APP client id")
-	rootCmd.PersistentFlags().StringVar(&eveSSOSecret, "eve_sso_secret", "", "EVE APP SSO secret")
-
-	rootCmd.MarkPersistentFlagRequired("session_key")
-	rootCmd.MarkPersistentFlagRequired("eve_client_id")
-	rootCmd.MarkPersistentFlagRequired("eve_sso_secret")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -1,6 +1,6 @@
 package main
 
-import "eve-fuelbot/cmd"
+import "github.com/lunemec/eve-fuelbot/cmd"
 
 func main() {
 	cmd.Execute()

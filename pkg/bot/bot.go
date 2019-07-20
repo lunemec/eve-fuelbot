@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"eve-fuelbot/pkg/token"
+	"github.com/lunemec/eve-fuelbot/pkg/token"
 
 	"github.com/antihax/goesi"
 	"github.com/antihax/goesi/esi"

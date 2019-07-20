@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 
-	"eve-fuelbot/pkg/handler"
-	"eve-fuelbot/pkg/token"
+	"github.com/lunemec/eve-fuelbot/pkg/handler"
+	"github.com/lunemec/eve-fuelbot/pkg/token"
 
 	"github.com/braintree/manners"
 	open "github.com/petermbenjamin/go-open"
@@ -26,6 +26,14 @@ var loginCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(loginCmd)
+	loginCmd.Flags().StringVarP(&authfile, "auth_file", "a", "auth.bin", "path to file where to save authentication data")
+	loginCmd.Flags().StringVarP(&sessionKey, "session_key", "s", "", "session key, use random string")
+	loginCmd.Flags().StringVar(&eveClientID, "eve_client_id", "", "EVE APP client id")
+	loginCmd.Flags().StringVar(&eveSSOSecret, "eve_sso_secret", "", "EVE APP SSO secret")
+
+	loginCmd.MarkFlagRequired("session_key")
+	loginCmd.MarkFlagRequired("eve_client_id")
+	loginCmd.MarkFlagRequired("eve_sso_secret")
 }
 
 func runLogin(cmd *cobra.Command, args []string) {

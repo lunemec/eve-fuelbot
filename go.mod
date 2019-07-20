@@ -1,4 +1,4 @@
-module eve-fuelbot
+module github.com/lunemec/eve-fuelbot
 
 go 1.12
 
