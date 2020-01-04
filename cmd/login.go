@@ -12,7 +12,7 @@ import (
 	"github.com/lunemec/eve-fuelbot/pkg/token"
 
 	"github.com/braintree/manners"
-	open "github.com/petermbenjamin/go-open"
+	open "github.com/pbnj/go-open"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

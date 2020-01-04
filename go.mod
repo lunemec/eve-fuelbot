@@ -15,7 +15,7 @@ require (
 	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
-	github.com/petermbenjamin/go-open v0.0.4
+	github.com/pbnj/go-open v0.1.1
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v0.0.3
 	github.com/spf13/viper v1.3.2
