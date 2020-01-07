@@ -50,7 +50,7 @@ func (b *fuelBot) allStructuresMessage(structures []structureData) *discordgo.Me
 			Name: structure.UniverseData.Name,
 		}
 		if structure.CorporationData.FuelExpires.IsZero() {
-			field.Value = "`UNFUELED`"
+			field.Value = "`UNFUELLED`"
 		} else {
 			field.Value = fmt.Sprintf("`%s` (%s)",
 				humanize.Time(structure.CorporationData.FuelExpires),
