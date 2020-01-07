@@ -67,6 +67,9 @@ func (b *fuelBot) Bot() error {
 	if err != nil {
 		return errors.Wrap(err, "unable to connect to discord")
 	}
+	// Add handler to listen for "!fuel" messages to report all structures fuel
+	// expiration date.
+	b.discord.AddHandler(b.messageFuelHandler)
 
 	for {
 		structs, err := b.loadStructures()
@@ -153,6 +156,10 @@ func (b *fuelBot) loadStructures() ([]structureData, error) {
 
 func (b *fuelBot) shouldNotify(structure structureData) bool {
 	expires := structure.CorporationData.FuelExpires
+	// Structures already expired (unfueled).
+	if expires.IsZero() {
+		return false
+	}
 	if time.Until(expires) <= time.Duration(b.refuelNotification) {
 		// If we already were notified, don't send message for notifyInterval duration.
 		if b.wasNotified(structure) {
