@@ -16,7 +16,7 @@ func (b *fuelBot) messageFuelHandler(s *discordgo.Session, m *discordgo.MessageC
 		return
 	}
 
-	// check if the message is "!airhorn"
+	// check if the message is "!fuel"
 	if m.Content == "!fuel" {
 		// Find the channel that the message came from.
 		c, err := s.State.Channel(m.ChannelID)
@@ -25,7 +25,6 @@ func (b *fuelBot) messageFuelHandler(s *discordgo.Session, m *discordgo.MessageC
 			b.log.Errorw("error finding channel_id to respond to !fuel message", "err", err)
 			return
 		}
-		fmt.Printf("CHANNEL_ID: %s", c.ID)
 
 		structs, err := b.loadStructures()
 		if err != nil {
