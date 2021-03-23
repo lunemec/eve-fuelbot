@@ -46,7 +46,11 @@ type structureData struct {
 
 // NewFuelBot returns new bot instance.
 func NewFuelBot(log logger, client *http.Client, tokenSource token.Source, discord *discordgo.Session, channelID string, checkInterval, notifyInterval, refuelNotification time.Duration) Bot {
-	log.Infow("EVE FuelBot starting", "check_interval", checkInterval, "notify_interval", notifyInterval, "refuel_notification", refuelNotification)
+	log.Infow("EVE FuelBot starting",
+		"check_interval", checkInterval,
+		"notify_interval", notifyInterval,
+		"refuel_notification", refuelNotification,
+	)
 	esi := goesi.NewAPIClient(client, "EVE FuelBot")
 	return &fuelBot{
 		tokenSource:        tokenSource,
@@ -74,9 +78,13 @@ func (b *fuelBot) Bot() error {
 	for {
 		structs, err := b.loadStructures()
 		if err != nil {
-			return errors.Wrap(err, "error loading structure information")
+			// Log but do not return error, we don't want to crash on panic.
+			b.log.Errorw("Error loading structures",
+				"error", errors.Wrap(err, "error loading structure information"),
+			)
 		}
 
+		// In case of previous error, we are iterating 0 times over nil slice.
 		for _, structure := range structs {
 			notify := b.shouldNotify(structure)
 			if notify {
@@ -86,11 +94,21 @@ func (b *fuelBot) Bot() error {
 					"structure_name", structure.UniverseData.Name,
 				)
 				_, err = b.discord.ChannelMessageSendEmbed(b.channelID, b.message(&structure))
-				if err != nil {
-					return errors.Wrap(err, "error sending discord message")
+				switch {
+				case err != nil:
+					b.log.Errorw("Error sending discord message",
+						"error", errors.Wrap(err, "error sending discord message"),
+					)
+					// In case of error, we fall through to the time.Sleep
+					// block. We also do not set the structure as notified
+					// and it get picked up on next iteration.
+					continue
+				case err == nil:
+					b.setWasNotified(structure)
 				}
 			}
 		}
+
 		time.Sleep(b.checkInterval)
 	}
 }
@@ -154,6 +172,8 @@ func (b *fuelBot) loadStructures() ([]structureData, error) {
 	return out, nil
 }
 
+// shouldNotify checks if given strucutre should be notified
+// right now.
 func (b *fuelBot) shouldNotify(structure structureData) bool {
 	expires := structure.CorporationData.FuelExpires
 	// Structures already expired (unfueled).
@@ -170,15 +190,22 @@ func (b *fuelBot) shouldNotify(structure structureData) bool {
 	return false
 }
 
+// setWasNotified stores information that structure was already
+// notified at time.Now()
+func (b *fuelBot) setWasNotified(structure structureData) {
+	id := structure.CorporationData.StructureId
+	b.notified[id] = time.Now()
+}
+
+// wasNotified checks if this structure was notified within
+// b.notifyInterval.
 func (b *fuelBot) wasNotified(structure structureData) bool {
 	id := structure.CorporationData.StructureId
 	notifyTime, ok := b.notified[id]
 	if !ok {
-		b.notified[id] = time.Now()
 		return false
 	}
 	if time.Since(notifyTime) > b.notifyInterval {
-		b.notified[id] = time.Now()
 		return false
 	}
 	return true
