@@ -1,10 +1,21 @@
 # EVE-FuelBot
 
-This is a discord bot, that will notify you when any of your structures is running out of fuel.
+I'm a discord bot, that will notify you when any of your structures is running out of fuel.
 
-Example message:  
+When your structure is running out:  
 ![FuelBot message example image](./message.jpg "FuelBot message example")
 
+When you ask me for `!fuel`:  
+![FuelBot fuel command example image](./fuel_command.png "FuelBot !fuel command example")
+
+# I can
+1. Check your structures every `check_interval`
+2. Notify you when structure will run out of fuel within `refuel_notification`
+3. Remind you every `notify_interval`, because you will forget you silly human
+4. List all structures and their fuel state with colors so your puny brain can comprehend
+5. List all services online in your structures
+6. Calculate the fuel required for you
+7. Tell you how much it will cost, and which fuel is cheaper
 ## Set-up
 1. Download binary for your architecture in `releases` section.
 

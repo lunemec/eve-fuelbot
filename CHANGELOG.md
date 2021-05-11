@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2021-05-11
+- Added estimated price of fuel based on 7 day rolling average of "The Forge" region.
+- Added nice ice cube icon for the "Total fuel" block
+- Added green, orange, red icons per structure, based on fuel remaining. Green=OK, Orange < 7 days, Red < 1 day.
 ## [1.1.3] - 2021-04-02
 - Add estimated fuel consumption per structure and total per day and month.
 ## [1.1.2] - 2021-03-23
