@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 }
 
 const (
-	addr           = "localhost:3000"
+	addr           = "0.0.0.0:3000"
 	eveCallbackURL = "http://localhost:3000/callback"
 )
 

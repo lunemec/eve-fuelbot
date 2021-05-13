@@ -56,7 +56,7 @@ func runBot(cmd *cobra.Command, args []string) {
 
 	client := httpClient()
 
-	tokenStorage := token.NewFileStorage("auth.bin")
+	tokenStorage := token.NewFileStorage(authfile)
 	tokenSource := token.NewSource(log, client, tokenStorage, []byte(sessionKey), eveClientID, eveSSOSecret, eveCallbackURL, eveScopes)
 
 	discord, err := discordgo.New("Bot " + discordAuthToken)

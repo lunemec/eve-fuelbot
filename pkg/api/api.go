@@ -108,7 +108,7 @@ func (a *api) callback(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
 	session := a.session(r)
 
-	if session.Values["state"] != state {
+	if session.Values["state"] != nil && session.Values["state"] != state {
 		a.log.Errorw("state mismatch", "stored", session.Values["state"], "received", state)
 		http.Error(w, "state mismatch, login again", http.StatusInternalServerError)
 		return

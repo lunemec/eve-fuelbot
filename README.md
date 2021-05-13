@@ -16,10 +16,9 @@ When you ask me for `!fuel`:
 5. List all services online in your structures
 6. Calculate the fuel required for you
 7. Tell you how much it will cost, and which fuel is cheaper
+
 ## Set-up
 1. Download binary for your architecture in `releases` section.
-2. Or grab a Docker image from https://hub.docker.com/repository/docker/lunemec/eve-fuelbot
-
 ### Part 1 - Get the Acess Tokens
 2. Go to [EVE developer portal](https://developers.eveonline.com/applications) and create a EVE app for the bot
    1. Grab the `Client ID` and `Secret Key`
@@ -39,6 +38,13 @@ When you ask me for `!fuel`:
     This will open web browser, and will authorize you with EVE account that can manage structures.
     When it is successfull, you can close the browser tab, and it will save the authentization information
     in `auth.bin` file.
+    
+    Docker version:
+    ```bash
+   $ docker volume create eve-fuelbot
+
+   $ docker run -v eve-fuelbot:/auth/ -p 3000:3000 lunemec/eve-fuelbot:latest login --auth_file=/auth/auth.bin -s "$RANDOM_STRING" --eve_client_id="$CLIENT_ID" --eve_sso_secret="$SSO_SECRET"
+   ```
 
 ### Part 3 - Run the bot and invite it to discord
 5. Copy the discord ChannelID where you want your bot (you have to enable DEV mode)
@@ -46,6 +52,12 @@ When you ask me for `!fuel`:
     ```
     fuelbot run -s "RANDOM_STRING" --discord_auth_token="FILLME" --discord_channel_id="FILLME" --eve_client_id="FILLME" --eve_sso_secret="FILLME"
     ```
+   Docker version:
+   ```bash
+   $ docker run -v eve-fuelbot:/auth/ lunemec/eve-fuelbot:latest run -s "$RANDOM_STRING" -a "/auth/auth.bin" --eve_client_id="$CLIENT_ID" --eve_sso_secret="$SSO_SECRET" --discord_auth_token="$DISCORD_TOKEN" --discord_channel_id="$DISCORD_CHANNEL_ID"
+   ```
+
+
     You can modify these parameters to make the bot trigger a message:
     ```
     --check_interval duration        how often to check EVE ESI API (default 1H) (default 1h0m0s)
