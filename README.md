@@ -18,6 +18,7 @@ When you ask me for `!fuel`:
 7. Tell you how much it will cost, and which fuel is cheaper
 ## Set-up
 1. Download binary for your architecture in `releases` section.
+2. Or grab a Docker image from https://hub.docker.com/repository/docker/lunemec/eve-fuelbot
 
 ### Part 1 - Get the Acess Tokens
 2. Go to [EVE developer portal](https://developers.eveonline.com/applications) and create a EVE app for the bot
