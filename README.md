@@ -1,6 +1,6 @@
 # EVE-FuelBot
 
-I'm a discord bot, that will notify you when any of your structures is running out of fuel.
+I'm a discord bot, that will notify you when any of your structures are running out of fuel.
 
 When your structure is running out:  
 ![FuelBot message example image](./message.jpg "FuelBot message example")
