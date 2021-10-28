@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.1.6] - 2021-10-28
+- Updated to SSO V2 and V5 User API.
 ## [1.1.5] - 2021-05-13
 - Added Dockerfile and docker image.
 - Added Docker variant of the setup.
