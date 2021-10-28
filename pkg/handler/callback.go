@@ -12,7 +12,7 @@ func (h *handler) callbackHandler(w http.ResponseWriter, r *http.Request) error 
 	state := r.FormValue("state")
 	session := h.session(r)
 
-	if session.Values["state"] != state {
+	if session.Values["state"] != nil && session.Values["state"] != state {
 		h.log.Errorw("state mismatch", "stored", session.Values["state"], "received", state)
 		return errors.New("state mismatch, login again")
 	}
