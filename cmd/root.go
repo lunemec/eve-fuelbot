@@ -31,7 +31,7 @@ var (
 	eveSSOSecret string // EVE APP SSO secret
 )
 
-var eveScopes = []string{"publicData", "esi-universe.read_structures.v2", "esi-corporations.read_structures.v1"}
+var eveScopes = []string{"publicData", "esi-universe.read_structures.v1", "esi-corporations.read_structures.v1"}
 
 func httpClient() *http.Client {
 	transport := httpcache.NewTransport(httpcache.NewMemoryCache())
