@@ -4,3 +4,5 @@ auth.bin.orig
 Makefile
 main
 fuelbot
+
+dist/
