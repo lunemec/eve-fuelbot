@@ -53,7 +53,17 @@ func runLogin(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	handler := handler.New(signalChan, log, httpClient(), token.NewFileStorage(authfile), []byte(sessionKey), eveClientID, eveSSOSecret, eveCallbackURL, eveScopes)
+	handler := handler.New(
+		signalChan,
+		log,
+		httpClient(),
+		token.NewFileStorage(authfile),
+		[]byte(sessionKey),
+		eveClientID,
+		eveSSOSecret,
+		eveCallbackURL,
+		eveScopes,
+	)
 	server := manners.NewWithServer(&http.Server{
 		Addr:         addr,
 		ReadTimeout:  10 * time.Second,

@@ -52,7 +52,7 @@ func init() {
 // New constructs new API http handler.
 func New(signalChan chan os.Signal, log handlerLogger, client *http.Client, tokenStorage token.Storage, secretKey []byte, clientID, ssoSecret string, callbackURL string, scopes []string) http.Handler {
 	esi := goesi.NewAPIClient(client, "EVE Scanner (lukas@nemec.lu)")
-	sso := goesi.NewSSOAuthenticator(client, clientID, ssoSecret, callbackURL, scopes)
+	sso := goesi.NewSSOAuthenticatorV2(client, clientID, ssoSecret, callbackURL, scopes)
 	r := chi.NewRouter()
 	h := handler{
 		signalChan:   signalChan,
