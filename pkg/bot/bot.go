@@ -117,8 +117,10 @@ func (b *fuelBot) message(structure *structureData) *discordgo.MessageEmbed {
 	whereMsg := "`%s`"
 	whereMsg = fmt.Sprintf(whereMsg, structure.UniverseData.Name)
 
-	whenMsg := "`%s` (%s)"
-	whenMsg = fmt.Sprintf("`%s` (%s)", humanize.Time(structure.CorporationData.FuelExpires), structure.CorporationData.FuelExpires)
+	whenMsg := fmt.Sprintf("`%s` (%s)",
+		humanize.Time(structure.CorporationData.FuelExpires),
+		structure.CorporationData.FuelExpires,
+	)
 
 	return &discordgo.MessageEmbed{
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
@@ -126,11 +128,11 @@ func (b *fuelBot) message(structure *structureData) *discordgo.MessageEmbed {
 		},
 		Color: 0xff0000,
 		Fields: []*discordgo.MessageEmbedField{
-			&discordgo.MessageEmbedField{
+			{
 				Name:  "Where?!",
 				Value: whereMsg,
 			},
-			&discordgo.MessageEmbedField{
+			{
 				Name:  "When?!",
 				Value: whenMsg,
 			},
@@ -182,10 +184,7 @@ func (b *fuelBot) shouldNotify(structure structureData) bool {
 	}
 	if time.Until(expires) <= time.Duration(b.refuelNotification) {
 		// If we already were notified, don't send message for notifyInterval duration.
-		if b.wasNotified(structure) {
-			return false
-		}
-		return true
+		return !b.wasNotified(structure)
 	}
 	return false
 }
@@ -209,14 +208,4 @@ func (b *fuelBot) wasNotified(structure structureData) bool {
 		return false
 	}
 	return true
-}
-
-func (b *fuelBot) formatMessage(structure structureData) string {
-	msg := `**%s** is running out of fuel!
-Will run out in **%s** (%s).`
-	return fmt.Sprintf(msg,
-		structure.UniverseData.Name,
-		humanize.Time(structure.CorporationData.FuelExpires),
-		structure.CorporationData.FuelExpires,
-	)
 }

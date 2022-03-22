@@ -7,7 +7,7 @@ import (
 )
 
 // Testing structure data for example message.
-var structures = []structureData{
+var structures = []structureData{ // nolint
 	{
 		CorporationData: esi.GetCorporationsCorporationIdStructures200Ok{
 			TypeId:      35832,

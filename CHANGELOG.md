@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.1.7] - 2022-03-22
+- Fixed missed V1->V2 of SSO.
+- Fixed lint issues.
+- Ported over fixes done to eve-quartermaster.
 ## [1.1.6] - 2021-10-28
 - Updated to SSO V2 and V5 User API.
 ## [1.1.5] - 2021-05-13

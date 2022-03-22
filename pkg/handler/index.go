@@ -12,12 +12,12 @@ import (
 func (h *handler) indexHandler(w http.ResponseWriter, r *http.Request) error {
 	_, err := h.character(r)
 	if err != nil {
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 		return nil
 	}
 	_, err = h.tokenSource(r, w)
 	if err != nil {
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 		return nil
 	}
 
@@ -27,7 +27,7 @@ func (h *handler) indexHandler(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return errors.Wrap(err, "unable to save token")
 	}
-	w.Write([]byte("logged in successfully"))
+	_, _ = w.Write([]byte("logged in successfully"))
 	// Spawn a goroutine that will send SIGTEM in 1s.
 	go func() {
 		time.Sleep(1 * time.Second)

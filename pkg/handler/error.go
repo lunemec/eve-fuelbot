@@ -19,7 +19,7 @@ func ErrorHandler(handler errorHandlerFunc, log handlerLogger) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := handler(w, r)
 		if err != nil {
-			log.Errorw("handler error", "err", err)
+			log.Errorw("handler error", "error", err)
 			switch v := err.(type) {
 			case handlerError:
 				http.Error(w, v.Error(), v.code)

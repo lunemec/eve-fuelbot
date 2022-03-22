@@ -40,11 +40,11 @@ func init() {
 	runCmd.Flags().DurationVar(&notifyInterval, "notify_interval", 12*time.Hour, "how often to spam discord (default 12H)")
 	runCmd.Flags().DurationVar(&refuelNotification, "refuel_notification", 5*24*time.Hour, "how far in advance would you like to be notified about the fuel (default 5 days)")
 
-	runCmd.MarkFlagRequired("session_key")
-	runCmd.MarkFlagRequired("eve_client_id")
-	runCmd.MarkFlagRequired("eve_sso_secret")
-	runCmd.MarkFlagRequired("discord_channel_id")
-	runCmd.MarkFlagRequired("discord_auth_token")
+	must(runCmd.MarkFlagRequired("session_key"))
+	must(runCmd.MarkFlagRequired("eve_client_id"))
+	must(runCmd.MarkFlagRequired("eve_sso_secret"))
+	must(runCmd.MarkFlagRequired("discord_channel_id"))
+	must(runCmd.MarkFlagRequired("discord_auth_token"))
 }
 
 func runBot(cmd *cobra.Command, args []string) {

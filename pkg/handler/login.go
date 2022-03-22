@@ -13,7 +13,7 @@ func (h *handler) loginHandler(w http.ResponseWriter, r *http.Request) error {
 		return errors.Wrap(err, "unable to create random state")
 	}
 
-	session := h.session(r)
+	session, _ := h.store.New(r, "eve-quartermaster-session")
 	session.Values["state"] = state.String()
 	err = session.Save(r, w)
 	if err != nil {
@@ -24,6 +24,6 @@ func (h *handler) loginHandler(w http.ResponseWriter, r *http.Request) error {
 	url := h.sso.AuthorizeURL(state.String(), true, h.scopes)
 
 	// Send the user to the URL
-	http.Redirect(w, r, url, 302)
+	http.Redirect(w, r, url, http.StatusFound)
 	return nil
 }

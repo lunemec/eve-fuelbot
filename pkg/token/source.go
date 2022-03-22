@@ -27,7 +27,7 @@ type source struct {
 
 // NewSource returns new token source from storage.
 func NewSource(log logger, client *http.Client, storage Storage, secretKey []byte, clientID, ssoSecret string, callbackURL string, scopes []string) Source {
-	sso := goesi.NewSSOAuthenticator(client, clientID, ssoSecret, callbackURL, scopes)
+	sso := goesi.NewSSOAuthenticatorV2(client, clientID, ssoSecret, callbackURL, scopes)
 	return &source{
 		storage: storage,
 		sso:     sso,
@@ -41,7 +41,7 @@ func (s *source) Token() (*oauth2.Token, error) {
 	}
 	newToken, err := ts.Token()
 	if err != nil {
-		return nil, errors.Errorf("error getting token")
+		return nil, errors.Wrapf(err, "error getting token")
 	}
 
 	// Save token.

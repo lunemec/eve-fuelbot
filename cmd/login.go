@@ -31,9 +31,9 @@ func init() {
 	loginCmd.Flags().StringVar(&eveClientID, "eve_client_id", "", "EVE APP client id")
 	loginCmd.Flags().StringVar(&eveSSOSecret, "eve_sso_secret", "", "EVE APP SSO secret")
 
-	loginCmd.MarkFlagRequired("session_key")
-	loginCmd.MarkFlagRequired("eve_client_id")
-	loginCmd.MarkFlagRequired("eve_sso_secret")
+	must(loginCmd.MarkFlagRequired("session_key"))
+	must(loginCmd.MarkFlagRequired("eve_client_id"))
+	must(loginCmd.MarkFlagRequired("eve_sso_secret"))
 }
 
 func runLogin(cmd *cobra.Command, args []string) {
@@ -83,7 +83,10 @@ func runLogin(cmd *cobra.Command, args []string) {
 		openAddr := fmt.Sprintf("http://%s", addr)
 		time.Sleep(1 * time.Second)
 		log.Infof("Opening browser at %s", openAddr)
-		open.Open(openAddr)
+		err := open.Open(openAddr)
+		if err != nil {
+			log.Error("Error opening browser", "error", err)
+		}
 	}()
 
 	log.Infof("Listening on %v", addr)

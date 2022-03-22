@@ -4,7 +4,6 @@ import (
 	"encoding/gob"
 	"net/http"
 	"os"
-	"sync"
 
 	"github.com/lunemec/eve-fuelbot/pkg/token"
 
@@ -33,10 +32,7 @@ type handler struct {
 
 type nameCache map[int32]esi.GetUniverseTypesTypeIdOk
 type cache struct {
-	names         nameCache
-	nameLock      sync.RWMutex
-	windowsToOpen []int32
-	windowsLock   sync.RWMutex
+	names nameCache
 }
 
 type handlerLogger interface {
@@ -51,7 +47,7 @@ func init() {
 
 // New constructs new API http handler.
 func New(signalChan chan os.Signal, log handlerLogger, client *http.Client, tokenStorage token.Storage, secretKey []byte, clientID, ssoSecret string, callbackURL string, scopes []string) http.Handler {
-	esi := goesi.NewAPIClient(client, "EVE Scanner (lukas@nemec.lu)")
+	esi := goesi.NewAPIClient(client, "EVE Quartermaster (lu.nemec@gmail.com)")
 	sso := goesi.NewSSOAuthenticatorV2(client, clientID, ssoSecret, callbackURL, scopes)
 	r := chi.NewRouter()
 	h := handler{
@@ -84,7 +80,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handler) session(r *http.Request) *sessions.Session {
-	sess, _ := h.store.Get(r, "session")
+	sess, _ := h.store.Get(r, "eve-quartermaster-session")
 	return sess
 }
 
@@ -98,7 +94,7 @@ func (h *handler) tokenSource(r *http.Request, w http.ResponseWriter) (oauth2.To
 	ts := h.sso.TokenSource(&token)
 	newToken, err := ts.Token()
 	if err != nil {
-		return nil, errors.Errorf("error getting token")
+		return nil, errors.Wrapf(err, "error getting token")
 	}
 
 	if token != *newToken {

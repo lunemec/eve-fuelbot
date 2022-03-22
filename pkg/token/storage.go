@@ -33,7 +33,11 @@ func (fs *fileStorage) Read() (oauth2.Token, error) {
 	}
 	defer f.Close()
 	dec := gob.NewDecoder(f)
-	dec.Decode(&out)
+	err = dec.Decode(&out)
+	if err != nil {
+		return out, errors.Wrap(err, "error decoding auth file")
+	}
+
 	return out, nil
 }
 
@@ -45,6 +49,5 @@ func (fs *fileStorage) Write(token oauth2.Token) error {
 	}
 	defer f.Close()
 	enc := gob.NewEncoder(f)
-	enc.Encode(token)
-	return nil
+	return errors.Wrap(enc.Encode(token), "error encoding auth file")
 }
