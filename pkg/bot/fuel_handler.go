@@ -168,7 +168,7 @@ var serviceByCategory = map[string][]service{
 	},
 	"resource processing": {
 		{
-			Name:        "Moon mining", // TODO verify this name
+			Name:        "Moon Drilling",
 			FuelPerHour: 5,
 		},
 	},
@@ -286,11 +286,13 @@ func (b *fuelBot) allStructuresMessage(structures []structureData) *discordgo.Me
 	}
 }
 
+const serviceStateOnline = "online"
+
 func (b *fuelBot) structureFuelPerDay(structure structureData, structureType structure) float64 {
 	var acc float64
 
 	for _, service := range structure.CorporationData.Services {
-		if service.State != "online" {
+		if service.State != serviceStateOnline {
 			continue
 		}
 
@@ -313,14 +315,21 @@ func (b *fuelBot) structureFuelPerDay(structure structureData, structureType str
 	return acc * 24
 }
 
+const (
+	heliumFuelBlockTypeID   = 4247 // "Helium Fuel Block"
+	hydrogenFuelBlockTypeID = 4246 // "Hydrogen Fuel Block"
+	nitrogenFuelBlockTypeID = 4051 // "Nitrogen Fuel Block"
+	oxygenFuelBlockTypeID   = 4312 // "Oxygen Fuel Block"
+)
+
 func (b *fuelBot) estFuelPrice(ctx context.Context) (map[int32]float64, error) {
 	var (
 		regionID int32 = 10000002 // The Forge (Jita)
 		typeIDs        = []int32{
-			4247, // "Helium Fuel Block"
-			4246, // "Hydrogen Fuel Block"
-			4051, // "Nitrogen Fuel Block"
-			4312, // "Oxygen Fuel Block"
+			heliumFuelBlockTypeID,
+			hydrogenFuelBlockTypeID,
+			nitrogenFuelBlockTypeID,
+			oxygenFuelBlockTypeID,
 		}
 	)
 
@@ -364,13 +373,13 @@ func formatFuelPrices(blocks float64, fuelPrices map[int32]float64) string {
 	}
 	prices := []float64{
 		// Helium
-		fuelPrices[4247] * blocks,
+		fuelPrices[heliumFuelBlockTypeID] * blocks,
 		// Hydrogen
-		fuelPrices[4246] * blocks,
+		fuelPrices[hydrogenFuelBlockTypeID] * blocks,
 		// Nitrogen
-		fuelPrices[4051] * blocks,
+		fuelPrices[nitrogenFuelBlockTypeID] * blocks,
 		// Oxygen
-		fuelPrices[4312] * blocks,
+		fuelPrices[oxygenFuelBlockTypeID] * blocks,
 	}
 	var minPriceIdx int
 	for i, price := range prices {
