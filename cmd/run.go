@@ -63,6 +63,7 @@ func runBot(cmd *cobra.Command, args []string) {
 	if err != nil {
 		panic(fmt.Sprintf("error inicializing discord client: %s", err))
 	}
+	discord.Identify.Intents |= discordgo.IntentMessageContent
 	bot := bot.NewFuelBot(log, client, tokenSource, discord, discordChannelID, checkInterval, notifyInterval, refuelNotification)
 	err = bot.Bot()
 	// systemd handles reload, so we can panic on error.
