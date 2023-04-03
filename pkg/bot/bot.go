@@ -27,6 +27,8 @@ type fuelBot struct {
 	discord     *discordgo.Session
 	channelID   string
 
+	httpClient *http.Client
+
 	checkInterval      time.Duration
 	notifyInterval     time.Duration
 	refuelNotification time.Duration
@@ -58,6 +60,7 @@ func NewFuelBot(log logger, client *http.Client, tokenSource token.Source, disco
 		esi:                esi,
 		discord:            discord,
 		channelID:          channelID,
+		httpClient:         &http.Client{Timeout: 5 * time.Second},
 		checkInterval:      checkInterval,
 		notifyInterval:     notifyInterval,
 		refuelNotification: refuelNotification,

@@ -2,13 +2,17 @@ package bot
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/url"
 	"strings"
 	"time"
 
 	"github.com/antihax/goesi/esi"
 	"github.com/bwmarrin/discordgo"
 	"github.com/dustin/go-humanize"
+	"github.com/pkg/errors"
 )
 
 type structure struct {
@@ -320,43 +324,75 @@ const (
 	hydrogenFuelBlockTypeID = 4246 // "Hydrogen Fuel Block"
 	nitrogenFuelBlockTypeID = 4051 // "Nitrogen Fuel Block"
 	oxygenFuelBlockTypeID   = 4312 // "Oxygen Fuel Block"
+
+	theForgeRegionID       = 10000002 // The Forge (Jita)
+	eveMarketerPriceAPIURL = "https://api.evemarketer.com/ec/marketstat/json"
 )
 
-func (b *fuelBot) estFuelPrice(ctx context.Context) (map[int32]float64, error) {
-	var (
-		regionID int32 = 10000002 // The Forge (Jita)
-		typeIDs        = []int32{
-			heliumFuelBlockTypeID,
-			hydrogenFuelBlockTypeID,
-			nitrogenFuelBlockTypeID,
-			oxygenFuelBlockTypeID,
-		}
-	)
-
-	var out = make(map[int32]float64)
-	for _, typeID := range typeIDs {
-		priceHistory, _, err := b.esi.ESI.MarketApi.GetMarketsRegionIdHistory(ctx, regionID, typeID, nil)
-		if err != nil {
-			return nil, err
-		}
-		out[typeID] = movingAverage(7, priceHistory)
-	}
-	return out, nil
+type eveMarketerBuySell struct {
+	Buy  eveMarketerItemStats `json:"buy"`
+	Sell eveMarketerItemStats `json:"sell"`
 }
 
-func movingAverage(days int, marketHistory []esi.GetMarketsRegionIdHistory200Ok) float64 {
-	historyLen := len(marketHistory)
-	if days > historyLen {
-		days = historyLen
+type eveMarketerItemStats struct {
+	Query struct {
+		TypeIDs []int32 `json:"types"`
+	} `json:"forQuery"`
+	Volume          float64 `json:"volume"`
+	WeightedAverage float64 `json:"wavg"`
+	Average         float64 `json:"avg"`
+	Variance        float64 `json:"variance"`
+	StdDev          float64 `json:"stdDev"`
+	Median          float64 `json:"median"`
+	FivePercent     float64 `json:"fivePercent"`
+	Max             float64 `json:"max"`
+	Min             float64 `json:"min"`
+}
+
+func (b *fuelBot) estFuelPrice(ctx context.Context) (map[int32]float64, error) {
+	typeIDs := []int32{
+		heliumFuelBlockTypeID,
+		hydrogenFuelBlockTypeID,
+		nitrogenFuelBlockTypeID,
+		oxygenFuelBlockTypeID,
 	}
 
-	var accum float64
-	for i := 1; i <= days; i++ {
-		dayData := marketHistory[historyLen-i]
-		accum += dayData.Average
+	eveMarketerURL, err := url.Parse(eveMarketerPriceAPIURL)
+	if err != nil {
+		return nil, errors.Wrap(err, "error parsing evemarketer api url")
+	}
+	query := eveMarketerURL.Query()
+	query.Add("regionlimit", fmt.Sprint(theForgeRegionID))
+	for _, typeID := range typeIDs {
+		query.Add("typeid", fmt.Sprint(typeID))
+	}
+	eveMarketerURL.RawQuery = query.Encode()
+
+	resp, err := b.httpClient.Get(eveMarketerURL.String())
+	if err != nil {
+		b.log.Errorw("error calling evemarketer API", "err", err, "url", eveMarketerURL.String())
+		return nil, errors.Wrap(err, "error calling evemarketer API")
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		b.log.Errorw("error reading evemarketer API response", "err", err)
+		return nil, errors.Wrap(err, "error reading evemarketer API response")
 	}
 
-	return accum / float64(days)
+	var eveMarketerResp []eveMarketerBuySell
+	err = json.Unmarshal(body, &eveMarketerResp)
+	if err != nil {
+		b.log.Errorw("error parsing evemarketer json", "err", err, "body", string(body))
+		return nil, errors.Wrap(err, "error parsing evemarketer json")
+	}
+
+	var out = make(map[int32]float64)
+	for _, eveMarketerRespItem := range eveMarketerResp {
+		typeID := eveMarketerRespItem.Sell.Query.TypeIDs[0]
+		out[typeID] = eveMarketerRespItem.Sell.WeightedAverage
+	}
+	return out, nil
 }
 
 func formatFuelPrices(blocks float64, fuelPrices map[int32]float64) string {
