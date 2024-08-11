@@ -27,7 +27,8 @@ When you ask me for `!fuel`:
 3. Go to [Discord Developer Portal](https://discordapp.com/developers/applications) and create new APP.
    1. Add `Bot` to this APP.
    2. Make the `bot` `public` so it can be added to your corp discord.
-   3. Grab the `Token`
+   3. Enable `Message Content Intent` in the `Privileged Gateway Intents` section
+   4. Grab the `Token` -- Use the `Reset Token` button if necessary
 4. Create RANDOM string for SESSION storage (you can use openssl, or just make something by hand)
 
 ### Part 2 - Login to EVE with the bot
@@ -64,7 +65,7 @@ When you ask me for `!fuel`:
     --notify_interval duration       how often to spam discord (default 12H) (default 12h0m0s)
     --refuel_notification duration   how far in advance would you like to be notified about the fuel (default 5 days) (default 120h0m0s)
     ```
-7. Go to [Discord Developer Portal](https://discordapp.com/developers/applications) and create new APP.
+7. Go back to the APP page in the [Discord Developer Portal](https://discordapp.com/developers/applications)
    1. Get the invite link for your bot: `OAuth2` section
       1. Click on `Scopes`: `bot`
       2. `Text Permissions`: `Send Messages`
@@ -79,3 +80,4 @@ If you are successfull, you should see the Bot's icon in the discord users list 
 
 ## No need to say thanks, that is what ISK is for.
 If you like this bot and use it, consider donating some ISK to `Lukas Nemec`. Thanks.
+
